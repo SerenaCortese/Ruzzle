@@ -14,9 +14,11 @@ import javafx.beans.property.StringProperty;
  *
  */
 public class Board {
-	private List<Pos> positions;
-	private Map<Pos, StringProperty> cells;
-
+	private List<Pos> positions; //elenco di posizioni possibili
+	private Map<Pos, StringProperty> cells; //contenuto singole caselle
+	//non uso array perché posizione è data da due interi, da due coordinate, ho un indice bidimensionale
+	//StringProperty per far aggiornare automaticamente il testo del bottone quando cambio la mappa
+	
 	private int size;
 
 	/**
@@ -43,13 +45,13 @@ public class Board {
 	/**
 	 * Fornisce la {@link StringProperty} corrispondente alla {@link Pos} specificata. <p>
 	 * 
-	 * PuÃ² essere usata per sapere che lettera Ã¨ presente
-	 * (es. {@code getCellValueProperty(p).get()}) oppure per fare un binding della proprietÃ  stessa sulla mappa visuale.
+	 * Può essere usata per sapere che lettera è presente
+	 * (es. {@code getCellValueProperty(p).get()}) oppure per fare un binding della proprietà  stessa sulla mappa visuale.
 	 * @param p
 	 * @return
 	 */
 	public StringProperty getCellValueProperty(Pos p) {
-		return this.cells.get(p) ;
+		return this.cells.get(p) ; //mi fa accedere al valore della cella così da vederla,modificarla ecc
 	}
 
 	/**
@@ -67,7 +69,7 @@ public class Board {
 		for(Pos p: this.positions) {
 			int random = (int)(Math.random()*26) ;
 			String letter = Character.toString((char)('A'+random)) ;
-			this.cells.get(p).set(letter); 
+			this.cells.get(p).set(letter); //setto la stringproperty al valore di quella stringa
 		}
 	}
 

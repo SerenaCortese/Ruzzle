@@ -1,5 +1,9 @@
 package it.polito.tdp.Ruzzle.model;
-
+/**
+ * é solo una classe per la coordinata dei quadratini della griglia
+ * @author Serena
+ *
+ */
 public class Pos {
 	private int row;
 	private int col;

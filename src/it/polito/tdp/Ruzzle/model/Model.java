@@ -1,11 +1,16 @@
 package it.polito.tdp.Ruzzle.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import it.polito.tdp.Ruzzle.db.DizionarioDAO;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-
+/**
+ * è ciò che gestisce il gioco
+ * @author Serena
+ *
+ */
 public class Model {
 	private final int SIZE = 4;
 	private Board board ;
@@ -48,6 +53,24 @@ public class Model {
 
 	public final void setStatusText(final String statusText) {
 		this.statusTextProperty().set(statusText);
+	}
+
+	public List<String> trovaTutte() {
+		
+		List<String> trovate = new ArrayList<String>();
+		
+		//aggiungo le parole esistenti nel dizionario
+		for(String parola: dizionario) {
+			parola = parola.toUpperCase();
+			if(parola.length()>1) { // non valgono parole da una sola lettera
+				if(trovaParola(parola)!=null) {
+					trovate.add(parola);
+				}
+			}
+			
+		}
+		
+		return trovate;
 	}
 	
 

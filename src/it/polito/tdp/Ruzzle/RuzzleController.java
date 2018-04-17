@@ -16,6 +16,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 
 public class RuzzleController {
@@ -23,6 +24,7 @@ public class RuzzleController {
 	private Model model ; 
 	
 	private Map<Pos,Button> letters ;
+		//mette in corrispondenza le posizioni con i bottoni veri e proprio
 	
 
     @FXML // ResourceBundle that was given to the FXMLLoader
@@ -87,6 +89,9 @@ public class RuzzleController {
 
     @FXML // fx:id="let33"
     private Button let33; // Value injected by FXMLLoader
+    
+    @FXML
+    private TextArea txtResult;
 
     @FXML // fx:id="txtStatus"
     private Label txtStatus; // Value injected by FXMLLoader
@@ -96,17 +101,33 @@ public class RuzzleController {
     	String parola = txtParola.getText() ;
     	
     	if(parola.length()==0) {
-    		//TODO: segnala errore
+    		txtStatus.setText("ERRORE: Parola vuota!");
     		return ;
     	}
     	
     	parola = parola.toUpperCase() ;
     	
-    	//TODO: dovrei ancora controllare che ci siano solo caratteri A-Z
-    	
+    	//controllo che ci siano solo caratteri A-Z
+    	if(!parola.matches("[A-Z]+")) { //non metto a-z perché ho appena fatto toUpperCase()
+    		txtStatus.setText("ERRORE: Caratteri non ammessi");
+    		return;
+    	}
     	List<Pos> percorso = model.trovaParola(parola) ;
     	
-    	System.out.println(percorso);
+    	if(percorso!=null) {
+    		//System.out.println(percorso); invece che stamparlo, evidenzio i tasti
+        	
+        	//setto tutti i tasti a non evidenziati
+        	for(Button b: letters.values()) {
+        		b.setDefaultButton(false);
+        	}
+        	//evidenzio i tasti del percorso
+        	for(Pos p: percorso) {
+        		letters.get(p).setDefaultButton(true);
+        	}
+    	}else {
+    		txtStatus.setText("Parola non trovata");
+    	}
     	
 
     }
@@ -117,7 +138,19 @@ public class RuzzleController {
 
     }
 
-
+    @FXML
+    void handleRisolvi(ActionEvent event) {
+    	//ridà tutte le soluzioni: voglio sapere quali sono le parole che hanno un percorso
+    	List<String> tutte = model.trovaTutte();
+    	
+    	txtResult.clear();
+    	txtResult.appendText(String.format("Trovate %d soluzioni\n", tutte.size()));
+    	for(String s : tutte) {
+    		txtResult.appendText(s+"\n");
+    	}
+    	
+    }
+    
     @FXML // This method is called by the FXMLLoader when initialization is complete
     void initialize() {
         assert txtParola != null : "fx:id=\"txtParola\" was not injected: check your FXML file 'Ruzzle.fxml'.";
@@ -167,11 +200,11 @@ public class RuzzleController {
     	this.letters.put(new Pos(3,2), let32) ;
     	this.letters.put(new Pos(3,3), let33) ;
 
-    	for(Pos cell: m.getBoard().getPositions()) {
+    	for(Pos cell: m.getBoard().getPositions()) { //per ogni posizione della board
     		this.letters.get(cell).textProperty().bind(m.getBoard().getCellValueProperty(cell));
-    	}
+    	}			//collego la posizione col bottone vero e proprio
     	
-    	this.txtStatus.textProperty().bind(m.statusTextProperty());
+    	//this.txtStatus.textProperty().bind(m.statusTextProperty());
     	
     }
 }
